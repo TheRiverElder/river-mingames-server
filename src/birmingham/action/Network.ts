@@ -26,15 +26,15 @@ export default class Network implements Action {
 
         // 消耗物资
         if (game.era === Eras.CANAL) {
-            profile.coins -= 3;
+            profile.money -= 3;
         } else if (game.era === Eras.RAIL) {
             if (cityUidLists.length === 1) {
-                profile.coins -= 5;
+                profile.money -= 5;
                 const industrySlot = game.findResource(profile, Resources.COAL, true, Array.from(adjusentCities));
                 if (!industrySlot) throw new Error(`Cannot network, resource ${Resources.COAL} not found or connected.`);
                 industrySlot.factory!.resources![1]--;
             } else if (cityUidLists.length === 2) {
-                profile.coins -= 15;
+                profile.money -= 15;
                 let restCoalAmount = 2;
                 while (restCoalAmount > 0) {
                     const industrySlot = game.findResource(profile, Resources.COAL, true, Array.from(adjusentCities));

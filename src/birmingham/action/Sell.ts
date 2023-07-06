@@ -49,10 +49,10 @@ export default class Sell implements Action {
                 }
             }
             
-            if (merchant.industries.indexOf(sourceFactory.industry) < 0) throw new Error(`Cannot sell, source resources is not acceptable.`);
+            if (merchant.industries.indexOf(sourceFactory.pattern.industry) < 0) throw new Error(`Cannot sell, source resources is not acceptable.`);
 
             sourceFactory.sold = true;
-            profile.gain(sourceFactory.awards);
+            profile.gain(sourceFactory.pattern.awards);
         }
 
     }

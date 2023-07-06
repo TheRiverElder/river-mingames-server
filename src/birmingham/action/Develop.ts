@@ -26,11 +26,11 @@ export default class Develop implements Action {
         for (const [industry, amount] of countedIndustries) {
             const factorySlotLine = profile.factories.find((factories) => factories[0] === industry)?.[1];
             if (factorySlotLine === undefined) throw new Error(`Cannot develop, factories of ${industry} not found.`);
-            const factorySlot = factorySlotLine.find(slot => slot.factories.length > 0);
+            const factorySlot = factorySlotLine.find(slot => slot.amount > 0);
             let counter = 0;
             for (const slot of factorySlotLine) {
-                if (slot.factories.length <= 0) continue;
-                counter += Math.min(amount - counter, slot.factories.length);
+                if (slot.amount <= 0) continue;
+                counter += Math.min(amount - counter, slot.amount);
                 if (counter >= amount) break;
             }
             if (counter < amount) throw new Error(`Cannot develop, industry ${industry} does not has enough factories to develop.`);
@@ -41,8 +41,8 @@ export default class Develop implements Action {
         for (const [line, amount] of factorySlotLines) {
             let counter = 0;
             for (const slot of line) {
-                if (slot.factories.length <= 0) continue;
-                const delta = Math.min(amount - counter, slot.factories.length);
+                if (slot.amount <= 0) continue;
+                const delta = Math.min(amount - counter, slot.amount);
                 line.splice(line.length - amount, amount);
                 counter += delta;
                 if (counter >= amount) break;

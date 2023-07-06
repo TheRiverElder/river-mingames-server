@@ -48,10 +48,11 @@ export default class Build implements Action {
         
         const factorySlots = profile.factories.find(([industry]) => industry === industry)?.[1];
         if (!factorySlots) throw new Error(`Cannot build, reason.`);
-        const factorySlot = factorySlots.find(slot => slot.factories.length > 0);
+        const factorySlot = factorySlots.find(slot => slot.amount > 0);
         if (!factorySlot) throw new Error(`Cannot build, reason.`);
 
-        const factory = factorySlot.factories.shift();
+        const factory = factorySlot.createFactory();
+        factorySlot.amount--;
         if (!factory) throw new Error(`Cannot build, reason.`);
 
         profile.pay(game, factorySlot.costs);
