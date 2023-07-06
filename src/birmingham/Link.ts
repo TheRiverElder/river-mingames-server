@@ -3,11 +3,13 @@ import Profile from "./Profile";
 import { Nullable } from "./lang";
 
 export default class Link {
+    readonly uid: number;
     readonly head: City;
     readonly tail: City;
     owner: Nullable<Profile> = null;
 
-    constructor(head: City, tail: City) {
+    constructor(uid: number, head: City, tail: City) {
+        this.uid = uid;
         this.head = head;
         this.tail = tail;
     }

@@ -14,6 +14,8 @@ export default class Game {
 
     private uidCounter = 0;
 
+    currentOrdinal: number = 0;
+
     genUid() {
         return this.uidCounter++;
     }

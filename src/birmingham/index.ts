@@ -1,5 +1,8 @@
 import express from "express"; 
 import expressWs from "express-ws"; 
+import { RpcRequestHandler } from "./RpcRequestHandler";
+import createGame from "./Initialization";
+import { ObjectBasedRpcServer } from "./lib/rpc/ObjectBasedRpcServer";
 
 const app = expressWs(express());
 app.app.ws("/birmingham", (ws, req) => {
@@ -26,4 +29,13 @@ app.app.ws("/birmingham", (ws, req) => {
     ws.onclose = () => {
 
     };
+});
+
+const game = createGame(2);
+
+const handler = new RpcRequestHandler(game);
+const rpcServer = new ObjectBasedRpcServer(handler);
+
+app.app.post("/", (req) => {
+    rpcServer.handle(req as any, req.path, ...JSON.parse(req.body));
 });

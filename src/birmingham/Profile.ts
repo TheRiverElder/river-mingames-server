@@ -11,10 +11,11 @@ export default class Profile {
     name: string = "";
     cards: Array<string> = [];
     factories: Array<[string, Array<FactorySlot>]> = []; // [Industry, factories]
-    coins: number = 0;
+    money: number = 0;
     costCoinCounter: number = 0;
     track: Track = new Track();
 
+    ordinal: number = -1;
     state: State = new IdleState();
 
     constructor(uid: number) {
@@ -24,7 +25,7 @@ export default class Profile {
     gain(awards: Array<[string, number]>) {
         for (const [type, amount] of awards) {
             switch (type) {
-                case Resources.COIN: this.coins += amount; break;
+                case Resources.COIN: this.money += amount; break;
                 case Resources.INCOME: this.track.climb(amount); break;
                 default: throw new Error(`Cannot gain ${type}`); break;
             }
@@ -34,7 +35,7 @@ export default class Profile {
     pay(game: Game, resources: Array<[string, number]>) {
         for (const [type, amount] of resources) {
             switch (type) {
-                case Resources.COIN: this.coins -= amount; break;
+                case Resources.COIN: this.money -= amount; break;
                 case Resources.INCOME: this.track.fall(amount); break;
                 case Resources.COAL: 
                 case Resources.IRON: 
