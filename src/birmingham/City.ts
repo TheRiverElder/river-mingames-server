@@ -1,23 +1,43 @@
+import { int, Pair } from "../libs/CommonTypes";
+import { Nullable } from "../libs/lang/Optional";
+import { Resource } from "./Constants";
 import IndustrySlot from "./IndustrySlot";
 import Market from "./Market";
-import Merchant from "./Merchant";
+import MerchantSlot from "./MerchantSlot";
 import Profile from "./Profile";
-import { Nullable } from "./lang";
 
 export default class City {
-    readonly uid: number;
-    readonly name: Nullable<string>;
+    readonly name: string;
+    readonly type: "industry" | "merchant";
     readonly industrySlots: Array<IndustrySlot>;
+    readonly merchantSlots: Array<MerchantSlot>;
     readonly market: Nullable<Market>;
-    readonly merchants: Array<Merchant>;
-    readonly merchantBonus: Nullable<Function>;
+    readonly merchantBonus: Nullable<Pair<Resource, int>>;
 
-    constructor(uid: number, name: Nullable<string> = null, market: Nullable<Market> = null, merchants: Array<Merchant> = [], merchantBonus: Nullable<Function> = null) {
-        this.uid = uid;
+    constructor(name: string, type: "industry" | "merchant", market: Nullable<Market> = null, merchantBonus: Nullable<Pair<Resource, int>> = null) {
         this.name = name;
+        this.type = type;
         this.market = market;
-        this.merchants = merchants;
         this.merchantBonus = merchantBonus;
+    }
+
+    save(): any {
+        return {
+            name: this.name,
+            type: this.type,
+            // industrySlots 不保存在此
+            // merchantSlots 不保存在此
+            // market 不保存在此
+            merchantBonus: this.merchantBonus,
+        };
+    }
+    
+    static load(data: any): City {
+        return new City(
+            data.name,
+            data.type,
+            data.merchantBonus,
+        );
     }
 
     isInNetworkOf(profile: Profile): boolean {

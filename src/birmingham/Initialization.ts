@@ -4,7 +4,7 @@ import Game from "./Game"
 import IndustrySlot from "./IndustrySlot";
 import Profile from "./Profile";
 import Loan from "./action/Loan";
-import { Nullable } from "./lang";
+import { Nullable } from "../libs/lang/Optional";
 
 export default function createGame(playerAmount: number): Game {
     const game = new Game();
@@ -15,7 +15,7 @@ export default function createGame(playerAmount: number): Game {
 
     CITIES_ARGS.forEach((args) => createAndAddCity(game, ...args));
 
-    game.actions.set("loan", new Loan());
+    game.actions.add(new Loan());
 
     return game;
 }

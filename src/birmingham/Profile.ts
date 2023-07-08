@@ -9,24 +9,55 @@ import State from "./state/State";
 export default class Profile {
     readonly uid: number;
     name: string = "";
+
     cards: Array<string> = [];
-    factories: Array<[string, Array<FactorySlot>]> = []; // [Industry, factories]
+    factorySlots = new Map<string, Array<FactorySlot>>(); // [Industry, factories]
     money: number = 0;
     costCoinCounter: number = 0;
-    track: Track = new Track();
+    goals: number = 0;
+    income: Track = new Track();
 
     ordinal: number = -1;
+    actionCounter: number = 0;
     state: State = new IdleState();
 
     constructor(uid: number) {
         this.uid = uid;
     }
 
+    save(): any {
+        return {
+            uid: this.uid,
+            name: this.name,
+            cards: this.cards,
+            money: this.money,
+            factorySlots: Array.from(this.factorySlots.entries()).map(([industory, slots]) => [industory, slots.map(s => s.save())]),
+            costCoinCounter: this.costCoinCounter,
+            goals: this.goals,
+            income: this.income.save(),
+            ordinal: this.ordinal,
+            actionCounter: this.actionCounter,
+        };
+    }
+    
+    static load(data: any, game: Game): Profile {
+        const profile = new Profile(data.uid);
+        profile.name = data.name;
+        profile.cards = data.cards;
+        profile.factorySlots = new Map(data.factorySlots.map(([industory, slotsData]) => [industory, slotsData.map(d => FactorySlot.load(d, game))]));
+        profile.costCoinCounter = data.costCoinCounter;
+        profile.goals = data.goals;
+        profile.income = data.income;
+        profile.ordinal = data.ordinal;
+        profile.actionCounter = data.actionCounter;
+        return profile;
+    }
+
     gain(awards: Array<[string, number]>) {
         for (const [type, amount] of awards) {
             switch (type) {
                 case Resources.COIN: this.money += amount; break;
-                case Resources.INCOME: this.track.climb(amount); break;
+                case Resources.INCOME_POINT: this.income.climb(amount); break;
                 default: throw new Error(`Cannot gain ${type}`); break;
             }
         }
@@ -36,7 +67,7 @@ export default class Profile {
         for (const [type, amount] of resources) {
             switch (type) {
                 case Resources.COIN: this.money -= amount; break;
-                case Resources.INCOME: this.track.fall(amount); break;
+                case Resources.INCOME_POINT: this.income.fall(amount); break;
                 case Resources.COAL: 
                 case Resources.IRON: 
                 case Resources.BEER: {

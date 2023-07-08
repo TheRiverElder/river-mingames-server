@@ -5,6 +5,8 @@ import Action from "./Action";
 
 export default class Develop implements Action {
 
+    get name(): string { return "develop"; }
+
     canUseCard(card: string, game: Game, profile: Profile) {
         return true;
     }

@@ -6,6 +6,8 @@ import Action from "./Action";
 
 export default class Network implements Action {
 
+    get name(): string { return "network"; }
+
     canUseCard(card: string, game: Game, profile: Profile) {
         return true;
     }

@@ -5,6 +5,16 @@ export default class Track {
         this.points = points;
     }
 
+    save(): any {
+        return {
+            points: this.points,
+        };
+    }
+    
+    static load(data: any): Track {
+        return new Track(data.points);
+    }
+
     climb(amount: number) {
         this.points += amount;
     }

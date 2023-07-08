@@ -1,18 +1,23 @@
-import Game from "./Game";
+
 
 export default class Market {
-    readonly uid: number;
-    readonly game: Game;
-    readonly string: string;
     readonly capacityLevel: number;
     amount: number;
 
-    constructor(game: Game, uid: number, string: string, capacityLevel: number, amount: number) {
-        this.game = game;
-        this.uid = uid;
-        this.string = string;
+    constructor(capacityLevel: number, amount: number) {
         this.capacityLevel = capacityLevel;
         this.amount = amount;
+    }
+
+    save(): any {
+        return {
+            capacityLevel: this.capacityLevel,
+            amount: this.amount,
+        };
+    }
+    
+    static load(data: any): Market {
+        return new Market(data.capacityLevel, data.amount);
     }
 
     getCapacity() {

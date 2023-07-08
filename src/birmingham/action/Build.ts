@@ -1,11 +1,13 @@
 import City from "../City";
-import { CITY_LIST } from "../Constants";
+import { CITY_CARD_LIST } from "../Constants";
 import Game from "../Game";
 import Profile from "../Profile";
 import { Location } from "../Types";
 import Action from "./Action";
 
 export default class Build implements Action {
+
+    get name(): string { return "build"; }
 
     canUseCard(card: string, game: Game, profile: Profile): boolean {
         // TODO
@@ -33,7 +35,7 @@ export default class Build implements Action {
         const [cityName, industrySlotIndex]: Location = args.location;
         const industry: string = args.industry;
 
-        const isCityCard = CITY_LIST.indexOf(card) >= 0 || card === "wild";
+        const isCityCard = CITY_CARD_LIST.indexOf(card) >= 0 || card === "wild";
         if (isCityCard && card !== "wild" && cityName !== card) throw new Error(`Cannot build, reason.`);
 
         const city = game.getCityByNmae(cityName)!;

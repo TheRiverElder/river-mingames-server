@@ -4,6 +4,8 @@ import Action from "./Action";
 
 export default class Scout implements Action {
 
+    get name(): string { return "scout"; }
+
     canUseCard(card: string, game: Game, profile: Profile) {
         return true;
     }

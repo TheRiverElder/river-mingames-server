@@ -1,18 +1,40 @@
+import { int } from "../libs/CommonTypes";
 import Factory from "./Factory";
+import FactoryPattern from "./FactoryPattern";
+import Game from "./Game";
 import Profile from "./Profile";
 
 export default class FactorySlot {
-    readonly industry: string;
+    readonly uid: int;
+    readonly pattern: FactoryPattern;
     readonly owner: Profile;
-    readonly costs: Array<[string, number]>;
-    readonly awards: Array<[string, number]>;
     amount: number = 0;
 
-    constructor(industry: string, costs: Array<[string, number]>, awards: Array<[string, number]>, amount: number = 0) {
-        this.industry = industry;
-        this.costs = costs;
-        this.awards = awards;
+    constructor(uid: int, pattern: FactoryPattern, owner: Profile, amount: number = 0) {
+        this.uid = uid;
+        this.pattern = pattern;
+        this.owner = owner;
         this.amount = amount;
+    }
+
+    save(): any {
+        return {
+            uid: this.uid,
+            pattern: this.pattern.uid,
+            owner: this.owner.uid,
+            amount: this.amount,
+        };
+    }
+    
+    static load(data: any, game: Game): FactorySlot {
+        const slot = new FactorySlot(
+            data.uid,
+            game.factoryPatterns.getOrThrow(data.pattern),
+            game.profiles.getOrThrow(data.owner),
+            data.amount,
+        );
+        slot.amount = data.amount;
+        return slot;
     }
 
     createFactory(): Factory {

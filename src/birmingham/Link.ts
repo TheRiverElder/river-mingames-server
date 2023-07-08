@@ -1,17 +1,42 @@
+import { Nullable } from "../libs/lang/Optional";
 import City from "./City";
+import { Era } from "./Constants";
+import Game from "./Game";
 import Profile from "./Profile";
-import { Nullable } from "./lang";
 
 export default class Link {
     readonly uid: number;
     readonly head: City;
     readonly tail: City;
+    readonly eras: Array<Era>;
     owner: Nullable<Profile> = null;
 
-    constructor(uid: number, head: City, tail: City) {
+    constructor(uid: number, head: City, tail: City, eras: Array<Era>) {
         this.uid = uid;
         this.head = head;
         this.tail = tail;
+        this.eras = eras;
+    }
+
+    save(): any {
+        return {
+            uid: this.uid,
+            head: this.head.name,
+            tail: this.tail.name,
+            eras: this.eras,
+            owner: this.owner?.uid || null,
+        };
+    }
+    
+    static load(data: any, game: Game): Link {
+        const link = new Link(
+            data.uid,
+            game.cities.getOrThrow(data.head),
+            game.cities.getOrThrow(data.tail),
+            data.eras,
+        );
+        link.owner = data.owner === null ? null : game.profiles.getOrThrow(data.owner);
+        return link;
     }
 
     getOtherEnd(end: City) {

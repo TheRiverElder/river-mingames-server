@@ -6,6 +6,8 @@ import { Location } from "../Types";
 
 export default class Sell implements Action {
 
+    get name(): string { return "sell"; }
+
     canUseCard(card: string, game: Game, profile: Profile) {
         return true;
     }
