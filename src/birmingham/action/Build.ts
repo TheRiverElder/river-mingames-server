@@ -1,5 +1,5 @@
 import City from "../City";
-import { CITY_CARD_LIST } from "../Constants";
+import { CITY_CARD_LIST, Industry } from "../Constants";
 import Game from "../Game";
 import Profile from "../Profile";
 import { Location } from "../Types";
@@ -32,32 +32,28 @@ export default class Build implements Action {
 
     act(args: any, game: Game, profile: Profile) {
         const card: string = args.card;
-        const [cityName, industrySlotIndex]: Location = args.location;
-        const industry: string = args.industry;
+        const industrySlot = game.industrySlots.getOrThrow(args.industrySlot);
+        const industry: Industry = args.industry;
+
+        if (industrySlot.factory) throw new Error(`该位置已有工厂`);
 
         const isCityCard = CITY_CARD_LIST.indexOf(card) >= 0 || card === "wild";
-        if (isCityCard && card !== "wild" && cityName !== card) throw new Error(`Cannot build, reason.`);
-
-        const city = game.getCityByNmae(cityName)!;
-        const industrySlot = city.industrySlots[industrySlotIndex]!;
-        if (industrySlot.industries.indexOf(industry) < 0) throw new Error(`Cannot build, reason.`);
-        if (industrySlot.factory) throw new Error(`Cannot build, reason.`);
+        if (isCityCard && card !== "wild" && industrySlot.city.name !== card) throw new Error(`城市不符合`);
 
         if (profile.hasNetWork(game)) {
             if (!profile.isCityConnected(game, city)) throw new Error(`Cannot build, reason.`);
         }
 
         
-        const factorySlots = profile.factories.find(([industry]) => industry === industry)?.[1];
-        if (!factorySlots) throw new Error(`Cannot build, reason.`);
-        const factorySlot = factorySlots.find(slot => slot.amount > 0);
-        if (!factorySlot) throw new Error(`Cannot build, reason.`);
+        const factorySlot = profile.getValidFactorySlot(industry);
+        if (!factorySlot) throw new Error(`没有剩余工厂${industry}}`);
 
         const factory = factorySlot.createFactory();
         factorySlot.amount--;
-        if (!factory) throw new Error(`Cannot build, reason.`);
 
-        profile.pay(game, factorySlot.costs);
+        if (industrySlot.canAcceptFactory(factory)) throw new Error(`工厂类型不符合`);
+
+        profile.pay(game, factory.pattern.costs);
         industrySlot.factory = factory;
     }
 }

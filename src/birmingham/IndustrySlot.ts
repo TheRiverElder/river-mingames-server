@@ -34,4 +34,8 @@ export default class IndustrySlot {
         slot.factory = data.factory === null ? null : Factory.load(data.factory, game);
         return slot;
     }
+
+    canAcceptFactory(factory: Factory) {
+        return this.industries.indexOf(factory.pattern.industry) >= 0;
+    }
 }

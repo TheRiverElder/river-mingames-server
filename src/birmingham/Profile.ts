@@ -1,10 +1,11 @@
 import City from "./City";
-import { Resources } from "./Constants";
+import { Industry, Resources } from "./Constants";
 import FactorySlot from "./FactorySlot";
 import Game from "./Game";
 import Track from "./Track";
 import IdleState from "./state/IdleState";
 import State from "./state/State";
+import { Nullable } from "../libs/lang/Optional";
 
 export default class Profile {
     readonly uid: number;
@@ -51,6 +52,12 @@ export default class Profile {
         profile.ordinal = data.ordinal;
         profile.actionCounter = data.actionCounter;
         return profile;
+    }
+
+    getValidFactorySlot(industry: Industry): Nullable<FactorySlot> {
+        const slots = this.factorySlots.get(industry);
+        if (!slots) return null;
+        return slots.find(s => s.amount > 0) || null;
     }
 
     gain(awards: Array<[string, number]>) {

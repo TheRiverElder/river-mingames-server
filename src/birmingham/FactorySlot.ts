@@ -38,6 +38,6 @@ export default class FactorySlot {
     }
 
     createFactory(): Factory {
-        return new Factory(this, this.owner);
+        return new Factory(this.pattern, this.owner);
     }
 }
