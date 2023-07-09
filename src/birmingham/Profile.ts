@@ -57,6 +57,21 @@ export default class Profile {
         return profile;
     }
 
+    getSimpleData() {
+        return {
+            uid: this.uid,
+            name: this.name,
+            cards: this.cards.map(it => "card_back"),
+            money: this.money,
+            factorySlots: Array.from(this.factorySlots.entries()).map(([industory, slots]) => [industory, slots.map(s => s.save())]),
+            costCoinCounter: this.costCoinCounter,
+            goals: this.goals,
+            income: this.income.save(),
+            ordinal: this.ordinal,
+            actionCounter: this.actionCounter,
+        };
+    }
+
     getValidFactorySlot(industry: Industry): Nullable<FactorySlot> {
         const slots = this.factorySlots.get(industry);
         if (!slots) return null;

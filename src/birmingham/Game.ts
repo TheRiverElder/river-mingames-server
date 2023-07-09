@@ -14,11 +14,16 @@ import FactorySlot from "./FactorySlot";
 import FactoryPattern from "./FactoryPattern";
 import ObservableRegistry from "../libs/management/ObservableRegistry";
 import { computeIfAbsent } from "../libs/lang/Collections";
+import Market from "./Market";
+import IdleState from "./state/IdleState";
+import ChooseActionState from "./state/ChooseActionState";
+import ActionState from "./state/ActionState";
 
 export default class Game {
     readonly actions = new Registry<string, Action>(it => it.name);
 
     readonly factoryPatterns = new Registry<int, FactoryPattern>(it => it.uid);
+    readonly markets = new Map<string, Market>();
     readonly cities = new Registry<string, City>(it => it.name);
     readonly factorySlots = new ObservableRegistry<int, FactorySlot>(it => it.uid);
     readonly industrySlots = new ObservableRegistry<int, IndustrySlot>(it => it.uid);
@@ -26,6 +31,7 @@ export default class Game {
     readonly links = new ObservableRegistry<int, Link>(it => it.uid);
     readonly profiles = new Registry<number, Profile>(it => it.uid); 
     era: Era = "canal";
+    roundCounter: int = 0;
     currentOrdinal: number = 0;
 
     constructor() {
@@ -36,14 +42,34 @@ export default class Game {
         // TODO remove logic
     }
 
-    getStaticData(): GameStaticData {
-        // TODO
-        throw new Error();
+    getData(profile: Profile): any {
+        return {
+            factoryPatterns: this.factoryPatterns.values().map(it => it.save()),
+            markets: Array.from(this.markets.entries()).map(it => [it[0], it[1].save()]),
+            cities: this.cities.values().map(it => it.save()),
+            factorySlots: this.factorySlots.values().map(it => it.save()),
+            industrySlots: this.industrySlots.values().map(it => it.save()),
+            merchantSlots: this.merchantSlots.values().map(it => it.save()),
+            links: this.links.values().map(it => it.save()),
+            profiles: this.profiles.values().map(it => profile === it ? it.save() : it.getSimpleData()),
+            era: this.era,
+            roundCounter: this.roundCounter,
+            currentOrdinal: this.currentOrdinal,
+        };
     }
 
-    getDynamicData(): GameDynamicData {
-        // TODO
-        throw new Error();
+    getUpdateData(profile: Profile): any {
+        return {
+            markets: Array.from(this.markets.entries()).map(it => [it[0], it[1].getUpdateData()]),
+            factorySlots: this.factorySlots.values().map(it => it.getUpdateData()),
+            industrySlots: this.industrySlots.values().map(it => it.getUpdateData()),
+            merchantSlots: this.merchantSlots.values().map(it => it.getUpdateData()),
+            links: this.links.values().map(it => it.getUpdateData()),
+            profiles: this.profiles.values().map(it => profile === it ? it.save() : it.getSimpleData()),
+            era: this.era,
+            roundCounter: this.roundCounter,
+            currentOrdinal: this.currentOrdinal,
+        };
     }
 
     save(): any {
@@ -56,6 +82,7 @@ export default class Game {
             links: this.links.values().map(it => it.save()),
             profiles: this.profiles.values().map(it => it.save()),
             era: this.era,
+            roundCounter: this.roundCounter,
             currentOrdinal: this.currentOrdinal,
         };
     }
@@ -69,7 +96,82 @@ export default class Game {
         data.factorySlots.forEach((it: any) => game.factorySlots.add(FactorySlot.load(it, game)));
         data.links.forEach((it: any) => game.links.add(Link.load(it, game)));
         data.profiles.forEach((it: any) => game.profiles.add(Profile.load(it, game)));
+        game.era = data.era;
+        game.roundCounter = data.roundCounter;
+        game.currentOrdinal = data.currentOrdinal;
+
+        game.refreshProfileStates();
+
         return game;
+    }
+    
+    fallBack() {
+        throw new Error("Method not implemented.");
+    }
+
+    initializeProfileStates() {
+        this.profiles.values().forEach((profile, index) => profile.ordinal = index);
+        this.era = "canal";
+        this.prepareNewEra();
+        this.refreshProfileStates();
+    }
+
+    refreshProfileStates() {
+        this.profiles.values().forEach((profile, index) => {
+            if (profile.ordinal === index) profile.state = new ChooseActionState();
+            else profile.state = new IdleState();
+        });
+    }
+
+    nextAction() {
+        const profile = this.profiles.values().find(profile => profile.ordinal === this.currentOrdinal);
+        if (!profile) throw new Error(`顺序错误`);
+        
+        profile.actionCounter++;
+        if (profile.actionCounter >= 2) this.nextTurn();
+        this.prepareNewAction();
+    }
+
+    prepareNewAction() {
+        const profile = this.profiles.values().find(profile => profile.ordinal === this.currentOrdinal);
+        if (!profile) throw new Error(`顺序错误`);
+        profile.state = new ChooseActionState();
+    }
+
+    nextTurn() {
+        this.currentOrdinal = this.currentOrdinal + 1;
+        if (this.currentOrdinal >= this.profiles.size()) this.nextRound();
+        this.prepareNewTurn();
+    }
+
+    prepareNewTurn() {
+        this.profiles.values().forEach((profile) => profile.actionCounter = 0);
+        this.prepareNewAction();
+    }
+
+    nextRound() {
+        this.roundCounter++;
+        if (this.roundCounter >= 10) this.nextEra();
+        this.prepareNewRound();
+    }
+
+    prepareNewRound() {
+        this.currentOrdinal = 0;
+        this.prepareNewTurn();
+    }
+
+    nextEra() {
+        if (this.era === "canal") {
+            this.era = "rail";
+        } else if (this.era === "rail") {
+            this.era = "end";
+        }
+        this.prepareNewEra();
+    }
+
+    prepareNewEra() {
+        this.roundCounter = 0;
+        this.prepareNewRound();
     }
 
     getLink(end1: City, end2: City): Nullable<Link> {

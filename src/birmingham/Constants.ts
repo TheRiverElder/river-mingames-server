@@ -62,7 +62,7 @@ export const Resources = {
 
 export const RESOURCE_LIST = Array.from(Object.values(Resources));
 
-export type Era = "canal" | "rail";
+export type Era = "canal" | "rail" | "end";
 
 export const Eras = {
     CANAL: "canal" as Era,

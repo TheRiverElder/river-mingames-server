@@ -20,6 +20,12 @@ export default class Market {
         return new Market(data.capacityLevel, data.amount);
     }
 
+    getUpdateData() {
+        return {
+            amount: this.amount,
+        };
+    }
+
     getCapacity() {
         return (this.capacityLevel - 1) * 2;
     }

@@ -1,3 +1,4 @@
+import { Pair, double } from "../libs/CommonTypes";
 import { Nullable } from "../libs/lang/Optional";
 import City from "./City";
 import { Era } from "./Constants";
@@ -6,13 +7,15 @@ import Profile from "./Profile";
 
 export default class Link {
     readonly uid: number;
+    readonly position: Pair<double, double>;
     readonly head: City;
     readonly tail: City;
     readonly eras: Array<Era>;
     owner: Nullable<Profile> = null;
 
-    constructor(uid: number, head: City, tail: City, eras: Array<Era>) {
+    constructor(uid: number, position: Pair<double, double>, head: City, tail: City, eras: Array<Era>) {
         this.uid = uid;
+        this.position = position;
         this.head = head;
         this.tail = tail;
         this.eras = eras;
@@ -21,6 +24,7 @@ export default class Link {
     save(): any {
         return {
             uid: this.uid,
+            position: this.position,
             head: this.head.name,
             tail: this.tail.name,
             eras: this.eras,
@@ -31,12 +35,20 @@ export default class Link {
     static load(data: any, game: Game): Link {
         const link = new Link(
             data.uid,
+            data.position,
             game.cities.getOrThrow(data.head),
             game.cities.getOrThrow(data.tail),
             data.eras,
         );
         link.owner = data.owner === null ? null : game.profiles.getOrThrow(data.owner);
         return link;
+    }
+
+    getUpdateData() {
+        return {
+            uid: this.uid,
+            owner: this.owner?.uid || null,
+        };
     }
 
     getOtherEnd(end: City) {

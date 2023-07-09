@@ -20,19 +20,28 @@ export class RpcRequestHandler {
     }
 
     ["performAction"](client: Profile, args: any) {
-        return (client.state as ActionState).perform(this.game, client, args);
+        try {
+            (client.state as ActionState).perform(this.game, client, args);
+            this.game.nextAction();
+            this.game.refreshProfileStates();
+            return {
+                succeeded: true,
+            };
+        } catch (e) {
+            this.game.fallBack();
+            return {
+                succeeded: false,
+                errorMessage: (e as Error).message,
+            };
+        }
     }
 
-    ["getMapData"](client: Profile) {
-        // TODO
+    ["getGameData"](client: Profile) {
+        return this.game.getData(client);
     }
 
-    ["getGameStaticData"](client: Profile) {
-        return this.game.getStaticData();
-    }
-
-    ["getGameDynamicData"](client: Profile) {
-        return this.game.getDynamicData();
+    ["getGameUpdateData"](client: Profile) {
+        return this.game.getUpdateData(client);
     }
 
     handleRpcRequest = (name: string, client: Profile, ...args: Array<any>) => {

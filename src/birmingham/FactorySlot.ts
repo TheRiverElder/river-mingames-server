@@ -37,6 +37,13 @@ export default class FactorySlot {
         return slot;
     }
 
+    getUpdateData() {
+        return {
+            uid: this.uid,
+            amount: this.amount,
+        };
+    }
+
     createFactory(): Factory {
         return new Factory(this.pattern, this.owner);
     }
