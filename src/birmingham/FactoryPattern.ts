@@ -6,13 +6,15 @@ export default class FactoryPattern {
     readonly level: int;
     readonly costs: Array<[string, number]>;
     readonly awards: Array<[string, number]>;
+    readonly beerPrice: int = 0;
 
-    constructor(uid: int, industry: string, level: int, costs: Array<[string, number]>, awards: Array<[string, number]>, amount: number = 0) {
+    constructor(uid: int, industry: string, level: int, costs: Array<[string, number]>, awards: Array<[string, number]>, beerPrice: int = 0) {
         this.uid = uid;
         this.industry = industry;
         this.level = level;
         this.costs = costs;
         this.awards = awards;
+        this.beerPrice = beerPrice;
     }
 
     save(): any {
@@ -22,6 +24,7 @@ export default class FactoryPattern {
             level: this.level,
             costs: this.costs,
             awards: this.awards,
+            beerPrice: this.beerPrice,
         };
     }
     
@@ -32,6 +35,7 @@ export default class FactoryPattern {
             data.level, 
             data.costs,
             data.awards,
+            data.beerPrice,
         );
     }
 }

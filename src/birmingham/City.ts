@@ -2,6 +2,7 @@ import { int, Pair } from "../libs/CommonTypes";
 import { Nullable } from "../libs/lang/Optional";
 import { Resource } from "./Constants";
 import IndustrySlot from "./IndustrySlot";
+import Link from "./Link";
 import Market from "./Market";
 import MerchantSlot from "./MerchantSlot";
 import Profile from "./Profile";
@@ -11,6 +12,7 @@ export default class City {
     readonly type: "industry" | "merchant";
     readonly industrySlots: Array<IndustrySlot>;
     readonly merchantSlots: Array<MerchantSlot>;
+    readonly links: Array<Link> = [];
     readonly market: Nullable<Market>;
     readonly merchantBonus: Nullable<Pair<Resource, int>>;
 
@@ -25,10 +27,11 @@ export default class City {
         return {
             name: this.name,
             type: this.type,
+            merchantBonus: this.merchantBonus,
             // industrySlots 不保存在此
             // merchantSlots 不保存在此
             // market 不保存在此
-            merchantBonus: this.merchantBonus,
+            // links 不保存在此
         };
     }
     
@@ -40,7 +43,7 @@ export default class City {
         );
     }
 
-    isInNetworkOf(profile: Profile): boolean {
+    hasFactoryOf(profile: Profile): boolean {
         return this.industrySlots.some(slot => slot.factory && slot.factory.owner === profile);
     }
 

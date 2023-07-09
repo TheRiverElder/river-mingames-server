@@ -11,7 +11,7 @@ export default class Loan implements Action {
     }
 
     act(args: any, game: Game, profile: Profile) {
-        if (profile.income.getIncomeLevel() - 3 < -10) throw new Error("Cannot loan, because income level is too low.");
+        if (profile.income.getIncomeLevel() - 3 < -10) throw new Error("收入等级太低");
         profile.income.fall(3);
         profile.money += 30;
     }

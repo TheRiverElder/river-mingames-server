@@ -12,7 +12,8 @@ export default class Scout implements Action {
 
     act(args: any, game: Game, profile: Profile) {
         const extraCards: Array<string> = args.extraCards;
-        if (extraCards.length !== 2) throw new Error("Cannot scout, because extra cards is not exactly 2.");
+        if (extraCards.length !== 2) throw new Error("必须刚好消耗2张手牌");
+        
         const newHandCards = profile.cards.slice();
         for (let handIndex = 0; handIndex < newHandCards.length; ) {
             const handCard = newHandCards[handIndex];
@@ -24,7 +25,7 @@ export default class Scout implements Action {
                 handIndex++;
             }
         }
-        if (extraCards.length > 0) throw new Error("Cannot scout, because hand cards does not contains the extra cards.");
+        if (extraCards.length > 0) throw new Error("消耗手牌错误");
         profile.cards = newHandCards;
     }
 }

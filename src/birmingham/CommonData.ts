@@ -1,5 +1,5 @@
+import { Nullable } from "../libs/lang/Optional";
 import { Industries } from "./Constants";
-import { Nullable } from "./lang";
 
 const { IRON_WORKS, COAL_MINE, BREWERY, CUTTON_MILL, MANUFACTURER, POTTERY } = Industries;
 

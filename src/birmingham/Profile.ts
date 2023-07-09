@@ -6,6 +6,9 @@ import Track from "./Track";
 import IdleState from "./state/IdleState";
 import State from "./state/State";
 import { Nullable } from "../libs/lang/Optional";
+import IndustrySlot from "./IndustrySlot";
+import { int, Pair } from "../libs/CommonTypes";
+import Market from "./Market";
 
 export default class Profile {
     readonly uid: number;
@@ -60,35 +63,51 @@ export default class Profile {
         return slots.find(s => s.amount > 0) || null;
     }
 
-    gain(awards: Array<[string, number]>) {
-        for (const [type, amount] of awards) {
-            switch (type) {
-                case Resources.COIN: this.money += amount; break;
-                case Resources.INCOME_POINT: this.income.climb(amount); break;
-                default: throw new Error(`Cannot gain ${type}`); break;
-            }
+    gain(type: string, amount: int) {
+        switch (type) {
+            case Resources.COIN: this.money += amount; break;
+            case Resources.INCOME_POINT: this.income.climb(amount); break;
+            default: throw new Error(`Cannot gain ${type}`); break;
         }
     }
 
-    pay(game: Game, resources: Array<[string, number]>) {
-        for (const [type, amount] of resources) {
-            switch (type) {
-                case Resources.COIN: this.money -= amount; break;
-                case Resources.INCOME_POINT: this.income.fall(amount); break;
-                case Resources.COAL: 
-                case Resources.IRON: 
-                case Resources.BEER: {
-                    // TODO
-                    game.findResource(this, type, type === Resources.COAL);
-                    break;
-                }
-                default: throw new Error(`Cannot gain ${type}`); break;
+    gainAll(resources: Array<Pair<string, int>>) {
+        resources.forEach(p => this.gain(...p));
+    }
+
+    pay(type: string, amount: int) {
+        switch (type) {
+            case Resources.COIN: this.money -= amount; break;
+            case Resources.INCOME_POINT: this.income.fall(amount); break;
+            default: throw new Error(`Cannot pay ${type}`); break;
+        }
+    }
+
+    payAll(resources: Array<Pair<string, int>>) {
+        resources.forEach(p => this.pay(...p));
+    }
+
+    payFromSource(type: string, amount: int, game: Game, source: IndustrySlot, targets: Array<City>) {
+        const factory = source.factory;
+        if (!factory || !factory.resources || factory.resources[0] !== type || factory.resources[1] < amount) throw new Error(`工厂上没有足够的${type}`);
+        // TODO 检查是否符合要求
+        // 煤炭要链接网路而且必须是最近的
+        if (type === Resources.COAL) {
+            for (const target of targets) {
+                const distance = game.getDistance(target, source.city);
             }
         }
+        // 钢铁可以飞
+        // 啤酒自己的可以飞，对手的要链接网路
+        factory.resources[1] -= amount;
+    }
+
+    payFromMarket(type: string, amount: int, game: Game, market: Market) {
+        
     }
 
     hasNetWork(game: Game): boolean {
-        return Array.from(game.cities.values()).some(city => city.industrySlots.some(slot => slot.factory && slot.factory.owner === this));
+        return game.cities.values().some(city => city.hasFactoryOf(this)) || game.links.values().some(link => link.owner === this);
     }
 
     isCityConnected(game: Game, city: City): boolean {
@@ -109,5 +128,26 @@ export default class Profile {
         }
 
         return false;
+    }
+
+    canPlaceFactoryAtCity(city: City, game: Game): boolean {
+        if (!this.hasNetWork(game)) return true;
+        return this.getCitiesThatCanBuildFactory(game).has(city);
+    }
+
+    getCitiesThatCanBuildFactory(game: Game): Set<City> {
+        const results = new Set<City>();
+
+        for (const link of game.links.values()) {
+            if (!link.built) continue;
+            for (const city of link.getEnds()) {
+                if (city.hasFactoryOf(this)) {
+                    link.getEnds().forEach(it => results.add(it));
+                    break;
+                }
+            }
+        }
+
+        return results;
     }
 }

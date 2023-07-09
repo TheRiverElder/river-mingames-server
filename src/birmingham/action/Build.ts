@@ -2,7 +2,6 @@ import City from "../City";
 import { CITY_CARD_LIST, Industry } from "../Constants";
 import Game from "../Game";
 import Profile from "../Profile";
-import { Location } from "../Types";
 import Action from "./Action";
 
 export default class Build implements Action {
@@ -33,6 +32,7 @@ export default class Build implements Action {
     act(args: any, game: Game, profile: Profile) {
         const card: string = args.card;
         const industrySlot = game.industrySlots.getOrThrow(args.industrySlot);
+        const city = industrySlot.city;
         const industry: Industry = args.industry;
 
         if (industrySlot.factory) throw new Error(`该位置已有工厂`);
@@ -41,10 +41,9 @@ export default class Build implements Action {
         if (isCityCard && card !== "wild" && industrySlot.city.name !== card) throw new Error(`城市不符合`);
 
         if (profile.hasNetWork(game)) {
-            if (!profile.isCityConnected(game, city)) throw new Error(`Cannot build, reason.`);
+            if (!profile.canPlaceFactoryAtCity(city, game)) throw new Error(`Cannot build, reason.`);
         }
 
-        
         const factorySlot = profile.getValidFactorySlot(industry);
         if (!factorySlot) throw new Error(`没有剩余工厂${industry}}`);
 
@@ -53,7 +52,8 @@ export default class Build implements Action {
 
         if (industrySlot.canAcceptFactory(factory)) throw new Error(`工厂类型不符合`);
 
-        profile.pay(game, factory.pattern.costs);
+        // 如何消耗资源
+        profile.payAll(factory.pattern.costs);
         industrySlot.factory = factory;
     }
 }

@@ -23,4 +23,8 @@ export default class ActionState implements State {
         return {};
     }
 
+    perform(game: Game, client: Profile, args: any) {
+        this.action.act(args, game, client);
+    }
+
 }

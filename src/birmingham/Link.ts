@@ -52,4 +52,12 @@ export default class Link {
     connectedCity(city: City) {
         return city === this.head || city === this.tail;
     }
+
+    getEnds() {
+        return [this.head, this.tail];
+    }
+
+    get built(): boolean {
+        return !!this.owner;
+    }
 }
