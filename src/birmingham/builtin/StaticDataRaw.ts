@@ -1,3 +1,6 @@
+import { Industries, Resources } from "../Constants";
+import FactoryPattern from "../FactoryPattern";
+
 export const STATIC_DATA_RAW_CITY = `
 anonymous_1	industry
 anonymous_2	industry
@@ -130,3 +133,307 @@ export const STATIC_DATA_RAW_CITY_SLOT = `
 57	gloucester	merchant	1	2422	3632
 58	shrewsbury	merchant	0	269	2268
 `;
+
+const { IRON, COAL, COIN, FACTORY_GOAL, INCOME_POINT, NETWORK_GOAL } = Resources;
+
+export const FACTORY_PATTERNS: Array<FactoryPattern> = [
+    //#region coal mine
+    new FactoryPattern(1, Industries.COAL_MINE, 1, 
+        [
+            [COIN, 5],
+        ], [
+            [FACTORY_GOAL, 1], 
+            [INCOME_POINT, 4], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(2, Industries.COAL_MINE, 2, 
+        [
+            [COIN, 7],
+        ], [
+            [FACTORY_GOAL, 2], 
+            [INCOME_POINT, 7], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(3, Industries.COAL_MINE, 3, 
+        [
+            [COIN, 8],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 3], 
+            [INCOME_POINT, 6], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(4, Industries.COAL_MINE, 4, 
+        [
+            [COIN, 10],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 4], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    //#endregion
+    //#region iron works
+    new FactoryPattern(5, Industries.IRON_WORKS, 1, 
+        [
+            [COIN, 5],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 3], 
+            [INCOME_POINT, 3], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(6, Industries.IRON_WORKS, 2, 
+        [
+            [COIN, 7],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 5], 
+            [INCOME_POINT, 3], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(7, Industries.IRON_WORKS, 3, 
+        [
+            [COIN, 9],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 7], 
+            [INCOME_POINT, 2], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(8, Industries.IRON_WORKS, 4, 
+        [
+            [COIN, 12],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 9], 
+            [INCOME_POINT, 1], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    //#endregion
+    //#region cottom mill
+    new FactoryPattern(9, Industries.COTTON_MILL, 1, 
+        [
+            [COIN, 5],
+        ], [
+            [FACTORY_GOAL, 5], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(10, Industries.COTTON_MILL, 2, 
+        [
+            [COIN, 7],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 5], 
+            [INCOME_POINT, 4], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(11, Industries.COTTON_MILL, 3, 
+        [
+            [COIN, 9],
+            [COAL, 1],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 9], 
+            [INCOME_POINT, 3], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(12, Industries.COTTON_MILL, 4, 
+        [
+            [COIN, 12],
+            [COAL, 1],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 12], 
+            [INCOME_POINT, 2], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    //#endregion
+    //#region pottery
+    new FactoryPattern(13, Industries.POTTERY, 1, 
+        [
+            [COIN, 17],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 10], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(14, Industries.POTTERY, 2, 
+        [
+            [COIN, 0],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 1], 
+            [INCOME_POINT, 1], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(15, Industries.POTTERY, 3, 
+        [
+            [COIN, 22],
+            [COAL, 2],
+        ], [
+            [FACTORY_GOAL, 11], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(16, Industries.POTTERY, 4, 
+        [
+            [COIN, 0],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 1], 
+            [INCOME_POINT, 1], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(17, Industries.POTTERY, 5, 
+        [
+            [COIN, 24],
+            [COAL, 2],
+        ], [
+            [FACTORY_GOAL, 20], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    //#endregion
+    //#region brewery
+    new FactoryPattern(18, Industries.BREWERY, 1, 
+        [
+            [COIN, 5],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 4], 
+            [INCOME_POINT, 4], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(19, Industries.BREWERY, 2, 
+        [
+            [COIN, 7],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 5], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(20, Industries.BREWERY, 3, 
+        [
+            [COIN, 9],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 7], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(21, Industries.BREWERY, 4, 
+        [
+            [COIN, 9],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 10], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    //#endregion
+    //#region manufacturer
+    new FactoryPattern(22, Industries.MANUFACTURER, 1, 
+        [
+            [COIN, 8],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 3], 
+            [INCOME_POINT, 5], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(23, Industries.MANUFACTURER, 2, 
+        [
+            [COIN, 10],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 5], 
+            [INCOME_POINT, 1], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(24, Industries.MANUFACTURER, 3, 
+        [
+            [COIN, 12],
+            [COAL, 2],
+        ], [
+            [FACTORY_GOAL, 4], 
+            [INCOME_POINT, 4], 
+        ],
+    ),
+    new FactoryPattern(25, Industries.MANUFACTURER, 4, 
+        [
+            [COIN, 8],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 3], 
+            [INCOME_POINT, 6], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(26, Industries.MANUFACTURER, 5, 
+        [
+            [COIN, 16],
+            [COAL, 1],
+        ], [
+            [FACTORY_GOAL, 8], 
+            [INCOME_POINT, 2], 
+            [NETWORK_GOAL, 2],
+        ],
+    ),
+    new FactoryPattern(27, Industries.MANUFACTURER, 6, 
+        [
+            [COIN, 20],
+        ], [
+            [FACTORY_GOAL, 7], 
+            [INCOME_POINT, 6], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    new FactoryPattern(28, Industries.MANUFACTURER, 7, 
+        [
+            [COIN, 16],
+            [COAL, 1],
+            [IRON, 1],
+        ], [
+            [FACTORY_GOAL, 9], 
+            [INCOME_POINT, 4], 
+        ],
+    ),
+    new FactoryPattern(29, Industries.MANUFACTURER, 8, 
+        [
+            [COIN, 20],
+            [IRON, 2],
+        ], [
+            [FACTORY_GOAL, 11], 
+            [INCOME_POINT, 1], 
+            [NETWORK_GOAL, 1],
+        ],
+    ),
+    //#endregion
+];

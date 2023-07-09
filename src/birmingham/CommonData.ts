@@ -1,7 +1,7 @@
 import { Nullable } from "../libs/lang/Optional";
 import { Industries } from "./Constants";
 
-const { IRON_WORKS, COAL_MINE, BREWERY, CUTTON_MILL, MANUFACTURER, POTTERY } = Industries;
+const { IRON_WORKS, COAL_MINE, BREWERY, COTTON_MILL: CUTTON_MILL, MANUFACTURER, POTTERY } = Industries;
 
 export const CITIES_ARGS: Array<[Nullable<string>, Array<Array<string>>]> = [
     ["birmingham", [

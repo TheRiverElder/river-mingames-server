@@ -42,7 +42,7 @@ export const Industries = {
     IRON_WORKS: "iron_works" as Industry,
     BREWERY: "brewery" as Industry,
     POTTERY: "pottery" as Industry,
-    CUTTON_MILL: "cutton_mill" as Industry,
+    COTTON_MILL: "cutton_mill" as Industry,
     MANUFACTURER: "manufacturer" as Industry,
 }
 

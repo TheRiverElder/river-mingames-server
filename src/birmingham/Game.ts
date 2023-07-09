@@ -4,8 +4,6 @@ import Link from "./Link";
 import Profile from "./Profile";
 import Action from "./action/Action";
 import { Nullable } from "../libs/lang/Optional";
-import GameDynamicData from "./communication/GameDynamicData";
-import GameStaticData from "./communication/GameStaticData";
 import { int, Pair, Predicator } from "../libs/CommonTypes";
 import Registry from "../libs/management/Registry";
 import MerchantSlot from "./MerchantSlot";
@@ -17,7 +15,6 @@ import { computeIfAbsent } from "../libs/lang/Collections";
 import Market from "./Market";
 import IdleState from "./state/IdleState";
 import ChooseActionState from "./state/ChooseActionState";
-import ActionState from "./state/ActionState";
 
 export default class Game {
     readonly actions = new Registry<string, Action>(it => it.name);
@@ -104,7 +101,7 @@ export default class Game {
 
         return game;
     }
-    
+
     fallBack() {
         throw new Error("Method not implemented.");
     }

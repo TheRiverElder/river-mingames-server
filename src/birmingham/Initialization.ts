@@ -6,7 +6,7 @@ import Develop from "./action/Develop";
 import Network from "./action/Network";
 import Scout from "./action/Scout";
 import Sell from "./action/Sell";
-import { STATIC_DATA_RAW_CITY, STATIC_DATA_RAW_CITY_SLOT, STATIC_DATA_RAW_LINKS } from "./builtin/StaticDataRaw";
+import { FACTORY_PATTERNS, STATIC_DATA_RAW_CITY, STATIC_DATA_RAW_CITY_SLOT, STATIC_DATA_RAW_LINKS } from "./builtin/StaticDataRaw";
 import { double, int, Pair } from "../libs/CommonTypes";
 import City from "./City";
 import { Era, Resources } from "./Constants";
@@ -29,6 +29,10 @@ export default function createGame(playerAmount: number): Game {
 
     game.markets.set(Resources.COAL, new Market(8, 13));
     game.markets.set(Resources.IRON, new Market(5, 8));
+
+    {
+        game.factoryPatterns.addAll(FACTORY_PATTERNS);
+    }
 
     {
         const table = STATIC_DATA_RAW_CITY.trim().split("\n").map(line => line.split("\t"));
