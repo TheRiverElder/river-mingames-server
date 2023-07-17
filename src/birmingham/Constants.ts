@@ -27,9 +27,9 @@ export const INDUSTRY_CARD_LIST = [
     "iron_works",
     "brewery",
     "pottery",
-    "cutton_mill_manufacturer",
-    "manufacturer_cutton_mill",
-    "manufacturer_cutton_mill_2",
+    "cotton_mill_manufacturer",
+    "manufacturer_cotton_mill",
+    "manufacturer_cotton_mill_2",
 ];
 
 export const CARD_LIST = [...CITY_CARD_LIST, ...INDUSTRY_CARD_LIST];

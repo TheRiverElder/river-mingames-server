@@ -16,6 +16,8 @@ import MerchantSlot from "./MerchantSlot";
 import Link from "./Link";
 import { Nullable } from "../libs/lang/Optional";
 import Profile from "./Profile";
+import { createArray } from "../libs/lang/Collections";
+import { shuffle } from "../libs/math/Mathmatics";
 
 export default function createGame(playerAmount: number): Game {
     const game = new Game();
@@ -71,12 +73,53 @@ export default function createGame(playerAmount: number): Game {
         }
     }
 
+    const cards = shuffle(createCards(playerAmount));
+
+    const cardAmountPerPlayer = cards.length / roundAmountByPlayerAmount[playerAmount - 2];
+
     for (let index = 0; index < playerAmount; index++) {
         const uid = 16 + index;
-        game.profiles.add(new Profile(uid));
+        const profile = new Profile(uid);
+        game.profiles.add(profile);
+        profile.cards = cards.splice(0, cardAmountPerPlayer);
     }
 
     game.initializeProfileStates();
 
     return game;
+}
+
+const roundAmountByPlayerAmount: Array<int> = [10, 9, 8];
+
+const cardStrategy: Array<[string, Array<int>]> = [
+    ["belper", [0, 0, 2]],
+    ["derby", [0, 0, 3]],
+    ["leek", [0, 2, 2]],
+    ["stoke_on_trent", [0, 3, 3]],
+    ["stone", [0, 2, 2]],
+    ["uttoxeter", [0, 1, 2]],
+    ["stafford", [2, 2, 2]],
+    ["burton_on_trent", [2, 2, 2]],
+    ["cannock", [2, 2, 2]],
+    ["tamworth", [1, 1, 1]],
+    ["walsall", [1, 1, 1]],
+    ["coalbrookdale", [3, 3, 3]],
+    ["dudley", [2, 2, 2]],
+    ["kidderminster", [2, 2, 2]],
+    ["wolverhampton", [2, 2, 2]],
+    ["worcester", [2, 2, 2]],
+    ["birmingham", [3, 3, 3]],
+    ["conventry", [3, 3, 3]],
+    ["nuneaton", [1, 1, 1]],
+    ["redditch", [1, 1, 1]],
+    ["iron_works", [4, 4, 4]],
+    ["coal_mine", [2, 2, 3]],
+    ["cotton_mill_manufacturer", [0, 6, 8]],
+    ["pottery", [2, 2, 3]],
+    ["brewery", [5, 5, 5]],
+];
+
+function createCards(playerAmount: int): Array<string> {
+    const index = playerAmount - 2;
+    return cardStrategy.map(([card, amounts]) => createArray(amounts[index], () => card)).flat(1);
 }

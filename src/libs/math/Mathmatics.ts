@@ -57,3 +57,15 @@ export function allModulo(value: number, divisor: number): number {
     const v = value + Math.ceil(Math.abs(value) / divisor) * divisor;
     return v % divisor;
 }
+
+export function shuffle<T>(array: Array<T>): Array<T> {
+    if (array.length <= 1) return array;
+    for (let i = 0; i < array.length; i++) {
+        const j = randInt(i, array.length);
+        if (i === j) continue;
+        const tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+    return array;
+}
