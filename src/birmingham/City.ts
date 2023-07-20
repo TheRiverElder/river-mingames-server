@@ -10,8 +10,8 @@ import Profile from "./Profile";
 export default class City {
     readonly name: string;
     readonly type: "industry" | "merchant";
-    readonly industrySlots: Array<IndustrySlot>;
-    readonly merchantSlots: Array<MerchantSlot>;
+    readonly industrySlots: Array<IndustrySlot> = [];
+    readonly merchantSlots: Array<MerchantSlot> = [];
     readonly links: Array<Link> = [];
     readonly market: Nullable<Market>;
     readonly merchantBonus: Nullable<Pair<Resource, int>>;

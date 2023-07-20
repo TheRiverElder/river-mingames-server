@@ -48,7 +48,7 @@ export default class Profile {
         const profile = new Profile(data.uid);
         profile.name = data.name;
         profile.cards = data.cards;
-        profile.factorySlots = new Map(data.factorySlots.map(([industory, slotsData]) => [industory, slotsData.map(d => FactorySlot.load(d, game))]));
+        profile.factorySlots = new Map(data.factorySlots.map(([industory, slotsData]: any) => [industory, slotsData.map((d: any) => FactorySlot.load(d, game))]));
         profile.costCoinCounter = data.costCoinCounter;
         profile.goals = data.goals;
         profile.income = data.income;

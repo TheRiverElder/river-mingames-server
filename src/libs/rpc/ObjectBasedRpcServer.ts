@@ -9,7 +9,7 @@ export class ObjectBasedRpcServer<TClient> implements RpcSever<TClient> {
     }
 
     handle(client: TClient, name: string, ...args: any[]) {
-        const f = this.base[name];
+        const f = (this.base as any)[name];
         if (typeof f !== "function") throw new Error("No such a interface.");
         return (f as Function).call(this.base, client, ...args);
     }

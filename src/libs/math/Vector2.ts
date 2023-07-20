@@ -1,4 +1,3 @@
-import { CSSProperties } from "react";
 import { int } from "../CommonTypes";
 import { square } from "./Mathmatics";
 
@@ -94,14 +93,14 @@ export default class Vector2 {
         return this === Vector2.INVALID_VECTOR2 || (Number.isNaN(this.x) || Number.isNaN(this.y));
     }
 
-    toPositionCss(): CSSProperties {
+    toPositionCss() {
         return {
             left: this.x + "px",
             top: this.y + "px",
         };
     }
 
-    toSizeCss(): CSSProperties {
+    toSizeCss() {
         return {
             width: this.x + "px",
             height: this.y + "px",

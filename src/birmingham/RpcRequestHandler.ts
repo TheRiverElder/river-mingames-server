@@ -55,6 +55,6 @@ export class RpcRequestHandler {
 }
 
 function call(base: object, name: string, client: Profile, args: Array<any>) {
-    const f = client.state[name];
+    const f = (client.state as any)[name];
     (f as Function).call(base, client, ...args);
 }

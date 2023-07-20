@@ -33,7 +33,7 @@ export default class I18n {
 
     private processValue(value: any): string {
         if (Array.isArray(value)) return value.map(e => this.processValue(e)).join(this.splitter);
-        if (Object.hasOwn((value as any).__proto__, "process")) return (value as Text).process(this); 
+        if (Object.getOwnPropertyDescriptor(value, "process")) return (value as Text).process(this); 
         return value;
     }
     
